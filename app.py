@@ -10,7 +10,7 @@ CORS(app)
 
 allIds=[]
 
-@app.route('/generate_audio', methods=['POST'])
+@app.route('/audioGenServer/generate_audio', methods=['POST'])
 def generate_audio():
     print("generate_audio")
     print(request.json)
@@ -36,7 +36,7 @@ def generate_audio():
     allIds.append(idToUse)
     return jsonify({"id":idToUse})
 
-@app.route('/get_all_ids', methods=['GET'])
+@app.route('/audioGenServer/get_all_ids', methods=['GET'])
 def get_all_ids():
     print("get_all_ids")
     return jsonify(allIds)
