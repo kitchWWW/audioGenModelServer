@@ -3,8 +3,6 @@ import boto.s3
 import sys
 from boto.s3.key import Key
 from decouple import config
-import sys
-
 
 AWS_ACCESS_KEY_ID  = config('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY =  config('AWS_SECRET_ACCESS_KEY')
