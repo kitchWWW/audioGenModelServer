@@ -1,3 +1,4 @@
+import random
 import time
 import json
 import statistics
@@ -12,6 +13,9 @@ model = baseten.deployed_model_id('ZBAgWGP')
 
 completedTasks = []
 
+def doAndSay(com):
+    print(com)
+    os.system(com)
 
 while True:
     allTodos = open("todoList.txt").readlines()
@@ -31,7 +35,7 @@ while True:
         ids.append(dat['timestamp'])
         completedTasks.append(data)
 
-    continue
+    print("going!")
     model_output = model.predict({'prompts': prompts, 'duration': statistics.mean(durs)})
     print("done!")
 
@@ -40,5 +44,7 @@ while True:
         with open(f"clips/clip_{idToUse}.wav", "wb") as f:
             print("Writing!")
             f.write(base64.b64decode(clip))
-            #hopefully we only get here once!
-            os.system('python uploader.py ./clips/clip_'+str(idToUse)+'.wav '+str(idToUse)+'.wav')
+            doAndSay('sox ./clips/clip_'+str(idToUse)+'.wav  ./clips/clip_'+str(idToUse)+'_z.wav  fade t .5 -0 .5 pad 0 '+str((1 + (random.random() * 5))))
+            doAndSay('python uploader.py ./clips/clip_'+str(idToUse)+'_z.wav '+str(idToUse)+'.wav')
+            doAndSay('rm ./clips/clip_'+str(idToUse)+'.wav')
+            doAndSay('rm ./clips/clip_'+str(idToUse)+'_z.wav')
