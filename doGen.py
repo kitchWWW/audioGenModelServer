@@ -35,7 +35,7 @@ while True:
         durs.append(int(dat['dur']))
         ids.append(dat['timestamp'])
         completedTasks.append(data)
-        fd.write(json.dumps(data)+"\n")
+        fd.write(data+"\n")
 
 
     print("going!")
