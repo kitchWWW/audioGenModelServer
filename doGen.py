@@ -11,7 +11,7 @@ import os
 
 model = baseten.deployed_model_id('ZBAgWGP')
 
-completedTasks = []
+completedTasks = open("completedTasks.txt").readlines()
 
 def doAndSay(com):
     print(com)
@@ -28,12 +28,15 @@ while True:
     prompts = []
     durs = []
     ids = []
+    fd = open("completedTasks.txt","a")
     for data in newList:
         dat = json.loads(data)
         prompts.append(dat['content'])
         durs.append(int(dat['dur']))
         ids.append(dat['timestamp'])
         completedTasks.append(data)
+        fd.write(json.dumps(data)+"\n")
+
 
     print("going!")
     model_output = model.predict({'prompts': prompts, 'duration': statistics.mean(durs)})
@@ -70,6 +73,7 @@ while True:
             doAndSay('python uploader.py ./clips/clip_'+str(idToUse)+'_z.wav '+str(idToUse)+'.wav')
             doAndSay('rm ./clips/clip_'+str(idToUse)+'.wav')
             doAndSay('rm ./clips/clip_'+str(idToUse)+'_z.wav')
+
 
 
 
