@@ -44,7 +44,32 @@ while True:
         with open(f"clips/clip_{idToUse}.wav", "wb") as f:
             print("Writing!")
             f.write(base64.b64decode(clip))
-            doAndSay('sox ./clips/clip_'+str(idToUse)+'.wav  ./clips/clip_'+str(idToUse)+'_z.wav  fade t .5 -0 .5 pad 0 '+str((1 + (random.random() * 5))))
+            if False:
+                doAndSay('sox ./clips/clip_'+str(idToUse)+'.wav  ./clips/clip_'+str(idToUse)+'_z.wav  fade t .5 -0 .5 pad 0 '+str((1 + (random.random() * 5))))
+            else:
+                f.close()
+                import numpy as np
+                from scipy.io import wavfile
+                # Load the wav file
+                sample_rate, data = wavfile.read(f"clips/clip_{idToUse}.wav")
+                # Convert data to float64 for processing
+                data = data.astype(np.float64)
+                # Extract the last one second of the audio
+                num_samples_for_fade = sample_rate * 1
+                last_second = data[-num_samples_for_fade:].copy()
+                fade_out = np.linspace(1, 0, num_samples_for_fade)
+                fade_in = np.linspace(0, 1, num_samples_for_fade)
+                data[:num_samples_for_fade] *= fade_in
+                last_second *= fade_out
+                trimmed_data = data[:-num_samples_for_fade]
+                data = trimmed_data
+                data[:num_samples_for_fade] += last_second
+                # Save the modified audio
+                wavfile.write('./clips/clip_'+str(idToUse)+'_z.wav', sample_rate, data.astype(np.int16))
+
             doAndSay('python uploader.py ./clips/clip_'+str(idToUse)+'_z.wav '+str(idToUse)+'.wav')
             doAndSay('rm ./clips/clip_'+str(idToUse)+'.wav')
             doAndSay('rm ./clips/clip_'+str(idToUse)+'_z.wav')
+
+
+
